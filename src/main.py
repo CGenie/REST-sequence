@@ -4,26 +4,30 @@ import copy
 import jinja2
 import json
 import requests
+import os
 import sys
 
 #from reader import read_requests
 
 def read_context(config=None):
-    f = open('global-config.json')
+    f = open(os.path.join('config', 'global-config.json'))
 
     cfg = json.loads(f.read())
 
     if config is not None:
         if not config.endswith('.json'):
             config = '%s.json' % config
-        f = open(config)
+        f = open(os.path.join('config', config))
         cfg.update(json.loads(f.read()))
 
     return cfg
 
 
-def read_requests():
-    f = open('requests.json')
+def read_requests(request=None):
+    if not request.endswith('.json'):
+        request = '%s.json' % request
+
+    f = open(os.path.join('config', request))
 
     lst = []
     for line in f:
@@ -73,10 +77,18 @@ def perform_requests(rqs, ctx={}):
 
 
 if __name__ == '__main__':
+    request = None
     config = None
-    if len(sys.argv) == 2:
+
+    if len(sys.argv) == 1:
+        print ('Usage: %s <request> [<context>]' % sys.argv[0])
+        sys.exit(1)
+
+    request = sys.argv[1]
+
+    if len(sys.argv) >= 2:
         config = sys.argv[1]
 
     ctx = read_context(config=config)
-    rqs = read_requests()
+    rqs = read_requests(request=request)
     perform_requests(rqs, ctx=ctx)
