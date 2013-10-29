@@ -30,23 +30,36 @@ def read_requests(request=None):
     f = open(os.path.join('config', request))
 
     lst = []
+    dependencies = []
+
     for line in f:
         if line == '----\n':
             yield {
+                'dependencies': dependencies,
                 'template': '\n'.join(lst),
             }
             lst = []
+            dependencies = []
+        elif line.startswith('DEPENDENCIES: '):
+            dependencies = line.replace('DEPENDENCIES: ', '').strip().split(' ')
         else:
             lst.append(line)
 
     if lst:
         yield {
+            'dependencies': dependencies,
             'template': '\n'.join(lst),
         }
 
 
 def perform_requests(rqs, ctx={}):
     for r in rqs:
+        dependencies = r.get('dependencies', [])
+
+        for dependency in dependencies:
+            rqs_ = read_requests(request=dependency)
+            perform_requests(rqs_, ctx=ctx)
+
         t = jinja2.Template(r['template'])
 
         rnd = t.render(ctx)
@@ -86,8 +99,8 @@ if __name__ == '__main__':
 
     request = sys.argv[1]
 
-    if len(sys.argv) >= 2:
-        config = sys.argv[1]
+    if len(sys.argv) >= 3:
+        config = sys.argv[2]
 
     ctx = read_context(config=config)
     rqs = read_requests(request=request)
