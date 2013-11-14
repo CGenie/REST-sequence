@@ -18,7 +18,11 @@ def read_context(config=None):
         if not config.endswith('.json'):
             config = '%s.json' % config
         f = open(os.path.join('config', config))
-        cfg.update(json.loads(f.read()))
+        r = f.read()
+        try:
+            cfg.update(json.loads(r))
+        except ValueError:
+            print ('Error decoding %s' % r)
 
     return cfg
 
