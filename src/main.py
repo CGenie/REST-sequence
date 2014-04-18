@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import copy
+import datetime
 import jinja2
 import json
 import requests
@@ -8,6 +9,10 @@ import os
 import sys
 
 #from reader import read_requests
+
+def format_datetime_now():
+    return datetime.datetime.now().isoformat()
+
 
 def read_context(config=None):
     f = open(os.path.join('config', 'global-config.json'))
@@ -23,6 +28,8 @@ def read_context(config=None):
             cfg.update(json.loads(r))
         except ValueError:
             print ('Error decoding %s' % r)
+
+    cfg['_timestamp'] = format_datetime_now()
 
     return cfg
 
@@ -81,7 +88,7 @@ def perform_requests(rqs, ctx={}):
             resp = m(url, data=json.dumps(body), headers=headers)
         else:
             print ('%s: %s' % (method.upper(), url))
-            resp = m(url, headers=headers)
+            resp = m(url, headers=headers, verify=False)
 
         print ('RESPONSE: %s' % resp.text)
         if resp.status_code < 300:
@@ -89,6 +96,8 @@ def perform_requests(rqs, ctx={}):
                 print ('WARNING: key %s already present in context, '
                        'overwriting' % name)
             ctx[name] = resp.json()
+            if isinstance(ctx[name], dict):
+                ctx[name]['_timestamp'] = format_datetime_now()
         else:
             print ('ERROR: http code is %d' % resp.status_code) 
 
