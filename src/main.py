@@ -95,7 +95,11 @@ def perform_requests(rqs, ctx={}):
             if name in ctx:
                 print ('WARNING: key %s already present in context, '
                        'overwriting' % name)
-            ctx[name] = resp.json()
+            try:
+                ctx[name] = resp.json()
+            except ValueError:
+                print ('WARNING: error decoding JSON in body')
+                ctx[name] = {}
             if isinstance(ctx[name], dict):
                 ctx[name]['_timestamp'] = format_datetime_now()
         else:
