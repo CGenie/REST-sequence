@@ -124,6 +124,9 @@ if __name__ == '__main__':
     if len(sys.argv) >= 3:
         config = sys.argv[2]
 
-    ctx = read_context(config=config)
+    ctx = {
+        'datetime': datetime,
+    }
+    ctx.update(read_context(config=config))
     rqs = read_requests(request=request)
     perform_requests(rqs, ctx=ctx)
