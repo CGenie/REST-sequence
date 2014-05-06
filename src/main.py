@@ -90,7 +90,12 @@ def perform_requests(rqs, ctx={}):
             print ('%s: %s' % (method.upper(), url))
             resp = m(url, headers=headers, verify=False)
 
-        print ('RESPONSE: %s' % resp.text)
+        try:
+            resp_text = json.dumps(resp.json(), indent=2)
+        except ValueError:
+            resp_text = resp.text
+
+        print ('RESPONSE: %s' % resp_text)
         if resp.status_code < 300:
             if name in ctx:
                 print ('WARNING: key %s already present in context, '
