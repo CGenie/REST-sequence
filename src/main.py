@@ -7,6 +7,7 @@ import json
 import requests
 import os
 import sys
+import time
 
 #from reader import read_requests
 
@@ -83,18 +84,21 @@ def perform_requests(rqs, ctx={}):
         headers = dd.get('headers', {})
 
         m = getattr(requests, method)
+        start = time.clock()
         if method in ['post', 'put']:
             print ('%s: %s\nBODY: %s' % (method.upper(), url, body))
             resp = m(url, data=json.dumps(body), headers=headers)
         else:
             print ('%s: %s' % (method.upper(), url))
             resp = m(url, headers=headers, verify=False)
+        end = time.clock()
 
         try:
             resp_text = json.dumps(resp.json(), indent=2)
         except ValueError:
             resp_text = resp.text
 
+        print ('TIME: %s' % (end - start))
         print ('RESPONSE: %s' % resp_text)
         if resp.status_code < 300:
             if name in ctx:
