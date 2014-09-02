@@ -94,7 +94,7 @@ def perform_requests(rqs, ctx={}):
         end = time.clock()
 
         try:
-            resp_text = json.dumps(resp.json(), indent=2)
+            resp_text = json.dumps(resp.json(), indent=2, sort_keys=True)
         except ValueError:
             resp_text = resp.text
 
