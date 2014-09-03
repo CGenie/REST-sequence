@@ -51,9 +51,4 @@ if __name__ == '__main__':
     if request is None or config is None:
         parser.error('request and config must be given together')
 
-    ctx = {
-        'datetime': datetime,
-    }
-    ctx.update(engine.read_context(config=config))
-    rqs = engine.read_requests(request=request)
-    engine.perform_requests(rqs, ctx=ctx)
+    engine.make_request(request, config)

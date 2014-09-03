@@ -34,6 +34,10 @@ def serve(port=None):
             requests.RequestHandler
         ),
         (
+            r"/requests/([\w_\.]+)/([_\w\.]+)/make/?",
+            requests.MakeRequestHandler
+        ),
+        (
             r"/servers/?",
             servers.ServersHandler
         ),

@@ -64,7 +64,11 @@ def read_requests(request=None):
 
 
 def perform_requests(rqs, ctx={}):
+    ret = []
+
     for r in rqs:
+        push = {}
+
         dependencies = r.get('dependencies', [])
 
         for dependency in dependencies:
@@ -84,31 +88,56 @@ def perform_requests(rqs, ctx={}):
 
         m = getattr(requests, method)
         start = time.clock()
+
+        push['method'] = method.upper()
+        push['url'] = url
+
         if method in ['post', 'put']:
-            print ('%s: %s\nBODY: %s' % (method.upper(), url, body))
+            push['body'] = body
+            print('%s: %s\nBODY: %s' % (method.upper(), url, body))
             resp = m(url, data=json.dumps(body), headers=headers)
         else:
-            print ('%s: %s' % (method.upper(), url))
+            print('%s: %s' % (method.upper(), url))
             resp = m(url, headers=headers, verify=False)
         end = time.clock()
 
         try:
             resp_text = json.dumps(resp.json(), indent=2, sort_keys=True)
+            resp_json = resp.json()
         except ValueError:
             resp_text = resp.text
+            resp_json = resp.text
 
-        print ('TIME: %s' % (end - start))
-        print ('RESPONSE: %s' % resp_text)
+        push['time'] = end - start
+        push['response'] = resp_json
+        push['status'] = resp.status_code
+
+        print('TIME: %s' % (end - start))
+        print('RESPONSE: %s' % resp_text)
         if resp.status_code < 300:
             if name in ctx:
-                print ('WARNING: key %s already present in context, '
+                print('WARNING: key %s already present in context, '
                        'overwriting' % name)
             try:
                 ctx[name] = resp.json()
             except ValueError:
-                print ('WARNING: error decoding JSON in body')
+                print('WARNING: error decoding JSON in body')
                 ctx[name] = {}
             if isinstance(ctx[name], dict):
                 ctx[name]['_timestamp'] = format_datetime_now()
         else:
-            print ('ERROR: http code is %d' % resp.status_code)
+            print('ERROR: http code is %d' % resp.status_code)
+
+        ret.append(push)
+
+    return ret
+
+
+def make_request(request, config):
+    ctx = {
+        'datetime': datetime,
+    }
+
+    ctx.update(read_context(config=config))
+    rqs = read_requests(request=request)
+    return perform_requests(rqs, ctx=ctx)

@@ -1,7 +1,22 @@
 <h3>[[ ngModel.name ]]</h3>
-<div ng-repeat="subrequest in ngModel.requests">
+<button ng-click="control.expand = !control.expand">
+    <span ng-if="!control.expand">Show</span>
+    <span ng-if="control.expand">Hide</span>
+</button>
+<div ng-if="control.expand"
+     ng-repeat="subrequest in ngModel.requests">
     <div ng-repeat="dependency in dependencies">
         [[ dependency ]]
     </div>
-    <div pretty-json="subrequest.template"></div>
+    <div prettyjson-editable ng-model="subrequest.template"></div>
+</div>
+<button ng-click="make_request()">Send...</button>
+<select ng-model="server"
+        ng-options="server.name for server in ngServers"></select>
+<div ng-if="requestResult">
+    <div ng-repeat="result in requestResult">
+        <div><b>[[ result.method ]]</b>: [[ result.url ]] ([[ result.status ]])</div>
+        <div><b>TIME</b>: [[ result.time ]]</div>
+        <div pretty-json="result.response"></div>
+    </div>
 </div>

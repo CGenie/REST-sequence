@@ -9,8 +9,6 @@
     <script type="text/javascript" src="/static/js/contrib/ng-prettyjson.min.js"></script>
 
     <script type="text/javascript" src="/static/js/main.js"></script>
-    <script type="text/javascript" src="/static/js/request-view.js"></script>
-    <script type="text/javascript" src="/static/js/server-view.js"></script>
 </head>
 <body ng-controller="MainController">
 
@@ -20,14 +18,16 @@
     </div>
 
     <div ng-if="control.view === 'servers'">
-        <div ng-repeat="server in servers">
-            <div server-view ng-model="server"></div>
-        </div>
+        <ul ng-repeat="server in servers">
+            <li server-view ng-model="server"></li>
+        </ul>
     </div>
     <div ng-if="control.view === 'requests'">
-        <div ng-repeat="request in requests">
-            <div request-view ng-model="request"></div>
-        </div>
+        <ul ng-repeat="request in requests">
+            <li request-view
+                ng-model="request"
+                ng-servers="servers"></li>
+        </ul>
     </div>
 
 </body>

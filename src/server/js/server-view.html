@@ -1,2 +1,3 @@
-<h3>[[ ngModel.name ]]</h3>
-<div pretty-json="ngModel.config"></div>
+<h3 ng-click="control.expand = !control.expand">[[ ngModel.name ]]</h3>
+<div ng-if="control.expand"
+     prettyjson-editable ng-model="ngModel.config"></div>

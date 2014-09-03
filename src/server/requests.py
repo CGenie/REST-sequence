@@ -53,3 +53,14 @@ class RequestHandler(RequestMixin, tornado.web.RequestHandler):
         """
         self.set_header('Content-Type', 'application/json')
         self.finish(json.dumps(self.format_request(request_name)))
+
+
+class MakeRequestHandler(RequestMixin, tornado.web.RequestHandler):
+    def get(self, request_name, server_name):
+        """
+        Return a list of all requests configs.
+        :return:
+        """
+        self.set_header('Content-Type', 'application/json')
+        self.finish(json.dumps(engine.make_request(request_name, server_name)))
+
