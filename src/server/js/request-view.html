@@ -1,0 +1,7 @@
+<h3>[[ ngModel.name ]]</h3>
+<div ng-repeat="subrequest in ngModel.requests">
+    <div ng-repeat="dependency in dependencies">
+        [[ dependency ]]
+    </div>
+    <div pretty-json="subrequest.template"></div>
+</div>

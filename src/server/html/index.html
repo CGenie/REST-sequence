@@ -1,0 +1,34 @@
+<html ng-app="RESTApp">
+<head>
+    <title>REST-sequence</title>
+
+    <link rel="stylesheet" href="/static/css/ng-prettyjson.min.css" />
+
+    <script type="text/javascript" src="/static/js/contrib/angular.min.js"></script>
+    <script type="text/javascript" src="/static/js/contrib/angular-resource.min.js"></script>
+    <script type="text/javascript" src="/static/js/contrib/ng-prettyjson.min.js"></script>
+
+    <script type="text/javascript" src="/static/js/main.js"></script>
+    <script type="text/javascript" src="/static/js/request-view.js"></script>
+    <script type="text/javascript" src="/static/js/server-view.js"></script>
+</head>
+<body ng-controller="MainController">
+
+    <div>
+        <div ng-click="control.view = 'servers'">Servers</div>
+        <div ng-click="control.view = 'requests'">Requests</div>
+    </div>
+
+    <div ng-if="control.view === 'servers'">
+        <div ng-repeat="server in servers">
+            <div server-view ng-model="server"></div>
+        </div>
+    </div>
+    <div ng-if="control.view === 'requests'">
+        <div ng-repeat="request in requests">
+            <div request-view ng-model="request"></div>
+        </div>
+    </div>
+
+</body>
+</html>
