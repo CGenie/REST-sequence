@@ -42,14 +42,19 @@ def serve(port=None):
             servers.ServersHandler
         ),
         (
+            r'/static/css/(.*)',
+            tornado.web.StaticFileHandler,
+            {'path': settings.CSS_STATICS_DIR}
+        ),
+        (
             r'/static/js/(.*)',
             tornado.web.StaticFileHandler,
             {'path': settings.JS_STATICS_DIR}
         ),
         (
-            r'/static/css/(.*)',
+            r'/static/fonts/(.*)',
             tornado.web.StaticFileHandler,
-            {'path': settings.CSS_STATICS_DIR}
+            {'path': settings.FONTS_STATICS_DIR}
         ),
     ], autoreload=True)
 

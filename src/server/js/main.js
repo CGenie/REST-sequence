@@ -27,7 +27,8 @@ app.directive('requestView', [
         return {
             scope: {
                 ngModel: '=',
-                ngServers: '='
+                ngServers: '=',
+                ngFilter: '=?'
             },
             templateUrl: '/static/js/request-view.html',
             restrict: 'A',
@@ -48,6 +49,10 @@ app.directive('requestView', [
                     }).$promise.then(function(data) {
                         scope.requestResult = data;
                     });
+                };
+
+                scope.clearRequestResult = function() {
+                    scope.requestResult = null;
                 };
             }  // link
         };  // return
@@ -126,7 +131,8 @@ var MainController = [
             serversResource = $resource(urls.servers);
 
         $scope.control = {
-            view: 'servers'
+            view: 'servers',
+            searchText: ''
         };
 
         $scope.requests = requestsResource.query();

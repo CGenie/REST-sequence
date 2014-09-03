@@ -3,6 +3,8 @@
     <title>REST-sequence</title>
 
     <link rel="stylesheet" href="/static/css/ng-prettyjson.min.css" />
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css" />
 
     <script type="text/javascript" src="/static/js/contrib/angular.min.js"></script>
     <script type="text/javascript" src="/static/js/contrib/angular-resource.min.js"></script>
@@ -10,24 +12,43 @@
 
     <script type="text/javascript" src="/static/js/main.js"></script>
 </head>
-<body ng-controller="MainController">
+<body ng-controller="MainController" style="padding-top: 70px;">
 
-    <div>
-        <div ng-click="control.view = 'servers'">Servers</div>
-        <div ng-click="control.view = 'requests'">Requests</div>
-    </div>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <ul class="nav navbar-nav" role="tablist">
+                <li ng-class="{active: control.view === 'servers'}"><a href="" ng-click="control.view = 'servers'">Servers</a></li>
+                <li ng-class="{active: control.view === 'requests'}"><a href="" ng-click="control.view = 'requests'">Requests</a></li>
+            </ul>
 
-    <div ng-if="control.view === 'servers'">
-        <ul ng-repeat="server in servers">
-            <li server-view ng-model="server"></li>
-        </ul>
-    </div>
-    <div ng-if="control.view === 'requests'">
-        <ul ng-repeat="request in requests">
-            <li request-view
-                ng-model="request"
-                ng-servers="servers"></li>
-        </ul>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Search"
+                           ng-model="control.searchText"/>
+                </div>
+            </form>
+        </div>
+    </nav>
+    <div class="container">
+
+        <div ng-if="control.view === 'servers'">
+            <ul ng-repeat="server in servers">
+                <li server-view
+                    ng-model="server"
+                    ng-filter="searchText"></li>
+            </ul>
+        </div>
+        <div ng-if="control.view === 'requests'">
+            <div ng-repeat="request in requests | filter:{name: control.searchText}">
+                <div request-view
+                     ng-model="request"
+                     ng-servers="servers"
+                     ng-filter="searchText"></div>
+            </div>
+        </div>
+
     </div>
 
 </body>
