@@ -9,6 +9,10 @@ from . import main
 import settings
 
 
+# Name of request/server regex
+RE = '([\w\-\.]+)'
+
+
 def serve(port=None):
     """
     Main loop of the server
@@ -30,11 +34,11 @@ def serve(port=None):
             requests.RequestsHandler
         ),
         (
-            r"/requests/(\w+)/?",
+            r"/requests/%s/?" % RE,
             requests.RequestHandler
         ),
         (
-            r"/requests/([\w_\.]+)/([_\w\.]+)/make/?",
+            r"/requests/%s/%s/make/?" % (RE, RE),
             requests.MakeRequestHandler
         ),
         (
