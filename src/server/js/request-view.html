@@ -15,8 +15,6 @@
     <div class="col-md-3">
         <button class="btn btn-primary"
                 ng-click="make_request()">Send...</button>
-        <select ng-model="server"
-                ng-options="server.name for server in ngServers"></select>
     </div>
 </div>
 
@@ -37,7 +35,13 @@
         <div ng-repeat="result in requestResult">
             <div><strong>[[ result.method ]]</strong>: [[ result.url ]] ([[ result.status ]])</div>
             <div><strong>TIME</strong>: [[ result.time ]]</div>
-            <div pretty-json="result.response"></div>
+            <div class="row">
+                <div ng-if="result.body"
+                     pretty-json="result.body"
+                     class=".pre-scrollable col-md-6"></div>
+                <div pretty-json="result.response"
+                     class="col-md-6"></div>
+            </div>
         </div>
     </div>
 </div>

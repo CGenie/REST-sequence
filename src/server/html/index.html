@@ -29,6 +29,10 @@
                            ng-model="control.searchText"/>
                 </div>
             </form>
+
+            <select ng-show="control.view === 'requests'"
+                    ng-model="server"
+                    ng-options="server.name for server in servers"></select>
         </div>
     </nav>
     <div class="container">
@@ -44,7 +48,7 @@
             <div ng-repeat="request in requests | filter:{name: control.searchText}">
                 <div request-view
                      ng-model="request"
-                     ng-servers="servers"
+                     ng-server="server"
                      ng-filter="searchText"></div>
             </div>
         </div>

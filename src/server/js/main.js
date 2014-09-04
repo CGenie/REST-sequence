@@ -27,7 +27,7 @@ app.directive('requestView', [
         return {
             scope: {
                 ngModel: '=',
-                ngServers: '=',
+                ngServer: '=',
                 ngFilter: '=?'
             },
             templateUrl: '/static/js/request-view.html',
@@ -36,7 +36,6 @@ app.directive('requestView', [
                 var makeRequestResource = $resource(urls.make_request);
 
                 scope.requestResult = null;
-                scope.server = scope.ngServers[0];
 
                 scope.control = {
                     expand: false
@@ -45,7 +44,7 @@ app.directive('requestView', [
                 scope.make_request = function() {
                     var requestResult = makeRequestResource.query({
                         request: scope.ngModel.name,
-                        server: scope.server.name
+                        server: scope.ngServer.name
                     }).$promise.then(function(data) {
                         scope.requestResult = data;
                     });
@@ -135,7 +134,13 @@ var MainController = [
             searchText: ''
         };
 
+        $scope.server = null;
+
         $scope.requests = requestsResource.query();
         $scope.servers = serversResource.query();
+
+        $scope.servers.$promise.then(function(data) {
+            $scope.server = data[0];
+        });
     }
 ];
