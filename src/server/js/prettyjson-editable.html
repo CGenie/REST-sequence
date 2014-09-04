@@ -2,15 +2,19 @@
     <div pretty-json="ngModel" ng-click="text_view()"></div>
 </div>
 <div ng-show="control.view === 'text'" class="row">
-    <div class="col-md-10">
-        <form role="form">
-            <div class="form-group">
-                <textarea ng-model="stringModel" cols="120" rows="20"></textarea>
-            </div>
-        </form>
-    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <ul class="nav nav-pills">
+                <li class="active" ng-click="json_view()"><a href>Save</a></li>
+            </ul>
+        </div>
 
-    <div class="col-md-1">
-        <button class="btn btn-primary" ng-click="json_view()">Save</button>
+        <div class="panel-body">
+            <form role="form">
+                <div class="form-group">
+                    <textarea ng-model="stringModel" cols="120" rows="20"></textarea>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
