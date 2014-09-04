@@ -1,21 +1,41 @@
 <div class="row">
 
-    <div class="col-md-7 h4">
+    <div class="col-md-7 h4"
+         ng-show="!control.expand">
         [[ ngModel.name ]]
+    </div>
+    <div class="col-md-7 h4"
+         ng-show="control.expand">
+        <input ng-model="ngModel.name" />
     </div>
 
     <div class="col-md-1">
         <button class="btn btn-default"
-                ng-click="control.expand = !control.expand">
+                ng-click="expand_toggle()">
             <span ng-if="!control.expand">Show</span>
             <span ng-if="control.expand">Hide</span>
         </button>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-2">
         <button class="btn btn-primary"
                 ng-click="make_request()">Send...</button>
     </div>
+
+    <div class="col-md-1">
+        <button class="btn btn-success"
+                ng-click="clone()">
+            Clone
+        </button>
+    </div>
+
+    <div class="col-md-1">
+        <button class="btn btn-danger"
+                ng-click="delete()">
+            Delete
+        </button>
+    </div>
+
 </div>
 
 <div class="row">
@@ -24,7 +44,9 @@
         <div ng-repeat="dependency in dependencies">
             [[ dependency ]]
         </div>
-        <div prettyjson-editable ng-model="subrequest.template"></div>
+        <div prettyjson-editable
+             ng-model="subrequest.template"
+             ng-save="save_request"></div>
     </div>
 </div>
 

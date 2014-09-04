@@ -1,7 +1,7 @@
-<div ng-if="control.view === 'json'">
+<div ng-show="control.view === 'json'">
     <div pretty-json="ngModel" ng-click="text_view()"></div>
 </div>
-<div ng-if="control.view === 'text'">
+<div ng-show="control.view === 'text'">
     <textarea ng-model="stringModel" cols="120" rows="20"></textarea>
     <button ng-click="json_view()">Save</button>
 </div>

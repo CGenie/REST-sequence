@@ -1,6 +1,12 @@
 import os
 
 
+# Separator for multiple requests in the same file
+REQUEST_SEPARATOR = '----'
+DEPENDENCIES_MARKER = 'DEPENDENCIES: '
+DEPENDENCIES_SEPARATOR = ' '
+
+
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 CONFIG_DIR = os.path.join(PROJECT_DIR, 'config')

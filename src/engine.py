@@ -44,15 +44,17 @@ def read_requests(request=None):
     for line in f:
         ln = line.rstrip('\n')
 
-        if ln == '----':
+        if ln == settings.REQUEST_SEPARATOR:
             yield {
                 'dependencies': dependencies,
                 'template': '\n'.join(lst),
             }
             lst = []
             dependencies = []
-        elif line.startswith('DEPENDENCIES: '):
-            dependencies = line.replace('DEPENDENCIES: ', '').strip().split(' ')
+        elif line.startswith(settings.DEPENDENCIES_MARKER):
+            dependencies = line.replace(
+                settings.DEPENDENCIES_MARKER, ''
+            ).strip().split(settings.DEPENDENCIES_SEPARATOR)
         else:
             lst.append(ln)
 
@@ -61,6 +63,33 @@ def read_requests(request=None):
             'dependencies': dependencies,
             'template': '\n'.join(lst),
         }
+
+
+def save_request(name, contents):
+    """
+    :param name: Can end in .json or not
+    :param contents: List of requests as returned by read_requests.
+    :return:
+    """
+
+    if not name.endswith('.json'):
+        name = '%s.json' % name
+
+    ret = []
+    for request in contents:
+        req = []
+        if request['dependencies']:
+            req.append('%s %s' % (
+                    settings.DEPENDENCIES_MARKER,
+                    settings.DEPENDENCIES_SEPARATOR.join(request['dependencies'])
+                )
+            )
+        req.append(json.dumps(request['template'], indent=4, sort_keys=True))
+
+        ret.append('\n'.join(req))
+
+    with open(os.path.join(settings.REQUESTS_DIR, name), 'w') as f:
+        f.write(settings.REQUEST_SEPARATOR.join(ret))
 
 
 def perform_requests(rqs, ctx={}):

@@ -16,23 +16,35 @@
 
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
-            <ul class="nav navbar-nav" role="tablist">
-                <li ng-class="{active: control.view === 'servers'}"><a href="" ng-click="control.view = 'servers'">Servers</a></li>
-                <li ng-class="{active: control.view === 'requests'}"><a href="" ng-click="control.view = 'requests'">Requests</a></li>
-            </ul>
+            <div class="row">
+                <ul class="nav navbar-nav col-md-2" role="tablist">
+                    <li ng-class="{active: control.view === 'servers'}"><a href="" ng-click="control.view = 'servers'">Servers</a></li>
+                    <li ng-class="{active: control.view === 'requests'}"><a href="" ng-click="control.view = 'requests'">Requests</a></li>
+                </ul>
 
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input type="text"
-                           class="form-control"
-                           placeholder="Search"
-                           ng-model="control.searchText"/>
+                <div class="col-md-3">
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="Search"
+                                       ng-model="control.searchText"/>
+                                <div class="input-group-addon"
+                                     ng-if="control.searchText.length > 0"
+                                     ng-click="control.searchText = ''">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
 
-            <select ng-show="control.view === 'requests'"
-                    ng-model="server"
-                    ng-options="server.name for server in servers"></select>
+                <select class="col-md-1"
+                        ng-show="control.view === 'requests'"
+                        ng-model="server"
+                        ng-options="server.name for server in servers"></select>
+            </div>
         </div>
     </nav>
     <div class="container">

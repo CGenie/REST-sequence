@@ -46,19 +46,53 @@ class RequestsHandler(RequestMixin, tornado.web.RequestHandler):
 
 
 class RequestHandler(RequestMixin, tornado.web.RequestHandler):
+    def delete(self, request_name):
+        """
+        Delete request.
+
+        :param request_name:
+        :return:
+        """
+
+        self.set_header('Content-Type', 'application/json')
+
+        if not request_name.endswith('.json'):
+            request_name = '%s.json' % request_name
+
+        os.remove(os.path.join(settings.REQUESTS_DIR, request_name))
+
+        self.finish()
+
     def get(self, request_name):
         """
         Return a list of all requests configs.
+
         :return:
         """
+
         self.set_header('Content-Type', 'application/json')
         self.finish(json.dumps(self.format_request(request_name)))
+
+    def post(self, request_name):
+        """
+        Create/update request.
+
+        :param request_name:
+        :return:
+        """
+
+        j = json.loads(self.request.body.decode('utf-8'))
+
+        self.set_header('Content-Type', 'application/json')
+        engine.save_request(request_name, j['requests'])
+        self.finish(j)
 
 
 class MakeRequestHandler(RequestMixin, tornado.web.RequestHandler):
     def get(self, request_name, server_name):
         """
-        Return a list of all requests configs.
+        Make request to server.
+
         :return:
         """
         self.set_header('Content-Type', 'application/json')

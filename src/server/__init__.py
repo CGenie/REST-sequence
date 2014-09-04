@@ -10,7 +10,7 @@ import settings
 
 
 # Name of request/server regex
-RE = '([\w\-\.]+)'
+RE = '([\w\-\.~]+)'
 
 
 def serve(port=None):
