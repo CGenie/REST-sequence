@@ -1,3 +1,41 @@
-<h3 ng-click="control.expand = !control.expand">[[ ngModel.name ]]</h3>
-<div ng-if="control.expand"
-     prettyjson-editable ng-model="ngModel.config"></div>
+<div class="row">
+
+    <div class="col-md-7 h4"
+         ng-show="!control.expand">
+        [[ ngModel.name ]]
+    </div>
+    <div class="col-md-7 h4"
+         ng-show="control.expand">
+        <input ng-model="ngModel.name" />
+    </div>
+
+    <div class="col-md-1">
+        <button class="btn btn-default"
+                ng-click="expand_toggle()">
+            <span ng-if="!control.expand">Show</span>
+            <span ng-if="control.expand">Hide</span>
+        </button>
+    </div>
+
+    <div class="col-md-1">
+        <button class="btn btn-success"
+                ng-click="clone()">
+            Clone
+        </button>
+    </div>
+
+    <div class="col-md-1">
+        <button class="btn btn-danger"
+                ng-click="delete()">
+            Delete
+        </button>
+    </div>
+
+</div>
+
+<div class="row"
+     ng-if="control.expand">
+    <div prettyjson-editable
+         ng-model="ngModel.config"
+         ng-save="save_server"></div>
+</div>

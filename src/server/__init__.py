@@ -46,6 +46,10 @@ def serve(port=None):
             servers.ServersHandler
         ),
         (
+            r"/servers/%s/?" % RE,
+            servers.ServerHandler
+        ),
+        (
             r'/static/css/(.*)',
             tornado.web.StaticFileHandler,
             {'path': settings.CSS_STATICS_DIR}

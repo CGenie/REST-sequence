@@ -28,6 +28,7 @@ var app = angular.module('RESTApp', ['ngResource', 'ngPrettyJson']),
         make_request: '/requests/:request/:server/make/',
         request: '/requests/:request/',
         requests: '/requests/',
+        server: '/servers/:server/',
         servers: '/servers/'
     };
 
@@ -104,8 +105,7 @@ app.directive('requestView', [
         return {
             scope: {
                 ngModel: '=',
-                ngServer: '=',
-                ngFilter: '=?'
+                ngServer: '='
             },
             templateUrl: '/static/js/request-view.html',
             restrict: 'A',
@@ -152,11 +152,13 @@ app.directive('requestView', [
                 };
 
                 scope.delete = function() {
-                    requestResource.delete(
-                        {request: scope.ngModel.name}
-                    ).$promise.then(function() {
-                        $rootScope.$broadcast('fetch-requests');
-                    });
+                    if(confirm('Delete' + scope.ngModel.name + '. Are you sure?')) {
+                        requestResource.delete(
+                            {request: scope.ngModel.name}
+                        ).$promise.then(function() {
+                                $rootScope.$broadcast('fetch-requests');
+                            });
+                    }
                 };
 
                 scope.save_request = function() {
@@ -191,7 +193,11 @@ app.directive('requestView', [
 
 
 app.directive('serverView', [
+    '$rootScope',
+    '$resource',
     function(
+        $rootScope,
+        $resource
     ) {
         'use strict';
 
@@ -202,8 +208,65 @@ app.directive('serverView', [
             templateUrl: '/static/js/server-view.html',
             restrict: 'A',
             link: function(scope, element, attrs) {
+                var serverResource = $resource(urls.server),
+                    oldName = scope.ngModel.name;
+
                 scope.control = {
                     expand: false
+                };
+
+                scope.clone = function() {
+                    var name = scope.ngModel.name,
+                        idx = name.indexOf('.json');
+
+                    if(idx === -1) {
+                        name = name + '~';
+                    } else {
+                        name = name.slice(0, idx) + '~.json';
+                    }
+
+                    serverResource.save(
+                        {server: name},
+                        scope.ngModel
+                    ).$promise.then(function() {
+                        $rootScope.$broadcast('fetch-servers');
+                    });
+                };
+
+                scope.delete = function() {
+                    if(confirm('Delete ' + scope.ngModel.name + '. Are you sure?')) {
+                        serverResource.delete(
+                            {server: scope.ngModel.name}
+                        ).$promise.then(function () {
+                            $rootScope.$broadcast('fetch-servers');
+                        });
+                    }
+                };
+
+                scope.save_server = function() {
+                    serverResource.save(
+                        {server: scope.ngModel.name},
+                        scope.ngModel
+                    ).$promise.then(function() {
+                        if(oldName !== scope.ngModel.name) {
+                            serverResource.delete(
+                                {server: oldName}
+                            ).$promise.then(function() {
+                                oldName = scope.ngModel.name;
+
+                                $rootScope.$broadcast('fetch-servers');
+                            });
+                        }
+                    });
+                };
+
+                scope.expand_toggle = function() {
+                    // If expanded view is present, save model under new name
+                    if(scope.control.expand) {
+                        scope.save_server();
+                    }
+
+                    scope.control.expand = !scope.control.expand;
                 };
             }  // link
         };  // return
@@ -236,7 +299,11 @@ var MainController = [
             $scope.requests = requestsResource.query();
         });
         $rootScope.$broadcast('fetch-requests');
-        $scope.servers = serversResource.query();
+
+        $rootScope.$on('fetch-servers', function() {
+            $scope.servers = serversResource.query();
+        });
+        $rootScope.$broadcast('fetch-servers');
 
         $scope.servers.$promise.then(function(data) {
             $scope.server = data[0];

@@ -51,17 +51,15 @@
 
         <div ng-if="control.view === 'servers'">
             <ul ng-repeat="server in servers">
-                <li server-view
-                    ng-model="server"
-                    ng-filter="searchText"></li>
+                <div server-view
+                    ng-model="server"></div>
             </ul>
         </div>
         <div ng-if="control.view === 'requests'">
             <div ng-repeat="request in requests | filter:{name: control.searchText}">
                 <div request-view
                      ng-model="request"
-                     ng-server="server"
-                     ng-filter="searchText"></div>
+                     ng-server="server"></div>
             </div>
         </div>
 

@@ -92,6 +92,20 @@ def save_request(name, contents):
         f.write(settings.REQUEST_SEPARATOR.join(ret))
 
 
+def save_server(name, config):
+    """
+    :param name: Can end in .json or not
+    :param contents: Dict with server's config.
+    :return:
+    """
+
+    if not name.endswith('.json'):
+        name = '%s.json' % name
+
+    with open(os.path.join(settings.SERVERS_DIR, name), 'w') as f:
+        f.write(json.dumps(config, indent=4, sort_keys=True))
+
+
 def perform_requests(rqs, ctx={}):
     ret = []
 

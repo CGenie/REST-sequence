@@ -65,7 +65,7 @@ class RequestHandler(RequestMixin, tornado.web.RequestHandler):
 
     def get(self, request_name):
         """
-        Return a list of all requests configs.
+        Return request's config.
 
         :return:
         """
