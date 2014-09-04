@@ -1,7 +1,16 @@
 <div ng-show="control.view === 'json'">
     <div pretty-json="ngModel" ng-click="text_view()"></div>
 </div>
-<div ng-show="control.view === 'text'">
-    <textarea ng-model="stringModel" cols="120" rows="20"></textarea>
-    <button ng-click="json_view()">Save</button>
+<div ng-show="control.view === 'text'" class="row">
+    <div class="col-md-10">
+        <form role="form">
+            <div class="form-group">
+                <textarea ng-model="stringModel" cols="120" rows="20"></textarea>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-1">
+        <button class="btn btn-primary" ng-click="json_view()">Save</button>
+    </div>
 </div>

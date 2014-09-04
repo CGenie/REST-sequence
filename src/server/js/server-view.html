@@ -6,7 +6,11 @@
     </div>
     <div class="col-md-7 h4"
          ng-show="control.expand">
-        <input ng-model="ngModel.name" />
+        <form role="form">
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="ngModel.name" />
+            </div>
+        </form>
     </div>
 
     <div class="col-md-3">
