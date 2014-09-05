@@ -43,9 +43,14 @@
 </div>
 
 <div class="row">
-    <div ng-if="control.expand"
+    <div class="row"
+         ng-if="control.expand"
          ng-repeat="subrequest in ngModel.requests">
-        <div ng-repeat="dependency in dependencies">
+        <div class="col-md-1">
+            <strong>Dependencies</strong>:
+        </div>
+        <div class="col-md-10"
+             ng-repeat="dependency in subrequest.dependencies">
             [[ dependency ]]
         </div>
         <div prettyjson-editable
