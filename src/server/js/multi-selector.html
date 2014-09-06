@@ -1,0 +1,15 @@
+<div ng-repeat="value in ngModel">
+    [[ value ]]
+    <span class="glyphicon glyphicon-remove-circle"
+          ng-click="remove(value)"></span>
+</div>
+
+<button class="btn btn-success">
+    <span class="glyphicon glyphicon-plus-sign"
+          ng-click="show_adder()"></span>
+</button>
+
+<div ng-repeat="value in ngValues"
+     ng-show="control.adder">
+    <span ng-click="add(value)">[[ value ]]</span>
+ </div>

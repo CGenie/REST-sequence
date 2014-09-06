@@ -59,7 +59,8 @@
             <div ng-repeat="request in requests | filter:{name: control.searchText}">
                 <div request-view
                      ng-model="request"
-                     ng-server="server"></div>
+                     ng-server="server"
+                     ng-request-names="requestNames"></div>
             </div>
         </div>
 

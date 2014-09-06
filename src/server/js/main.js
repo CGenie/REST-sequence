@@ -93,6 +93,45 @@ app.directive('prettyjsonEditable', [
 ]);  // app.directive('prettyjsonEditable'
 
 
+app.directive('ngMultiSelector', [
+    function(
+    ) {
+        'use strict';
+
+        return {
+            scope: {
+                ngModel: '=',
+                ngValues: '='
+            },
+            restrict: 'A',
+            templateUrl: '/static/js/multi-selector.html',
+            link: function(scope, element, attrs) {
+                scope.control = {
+                    adder: false
+                };
+
+                scope.show_adder = function() {
+                    scope.control.adder = true;
+                };
+
+                scope.add = function(value) {
+                    scope.control.adder = false;
+
+                    scope.ngModel.push(value);
+                };
+
+                scope.remove = function(value) {
+                    var idx = scope.ngModel.indexOf(value);
+                    if(idx > -1) {
+                        scope.ngModel.splice(idx, 1);
+                    }
+                };
+            }  // link
+        };  // return
+    }  // function
+]);  // app.directive('ngMultiSelector'
+
+
 app.directive('requestView', [
     '$rootScope',
     '$resource',
@@ -105,7 +144,8 @@ app.directive('requestView', [
         return {
             scope: {
                 ngModel: '=',
-                ngServer: '='
+                ngServer: '=',
+                ngRequestNames: '='
             },
             templateUrl: '/static/js/request-view.html',
             restrict: 'A',
@@ -294,9 +334,18 @@ var MainController = [
         };
 
         $scope.server = null;
+        $scope.requestNames = [];
 
         $rootScope.$on('fetch-requests', function() {
             $scope.requests = requestsResource.query();
+
+            $scope.requests.$promise.then(function(requests) {
+                $scope.requestNames = [];
+
+                angular.forEach(requests, function(request) {
+                    $scope.requestNames.push(request.name);
+                });
+            });
         });
         $rootScope.$broadcast('fetch-requests');
 
