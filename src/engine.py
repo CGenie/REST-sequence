@@ -10,10 +10,11 @@ import settings
 
 
 class MakeRequestException(Exception):
-    def __init__(self, message, request=None, template=None):
+    def __init__(self, message, url=None, request=None, template=None):
         super(MakeRequestException, self).__init__(message)
 
         self.message = message
+        self.url = url
         self.request = request
         self.template = template
 
@@ -163,13 +164,31 @@ def perform_requests(rqs, ctx={}):
         push['method'] = method.upper()
         push['url'] = url
 
+        params = {
+            'headers': headers,
+        }
+
         if method in ['post', 'put']:
             push['body'] = body
             print('%s: %s\nBODY: %s' % (method.upper(), url, body))
-            resp = m(url, data=json.dumps(body), headers=headers)
+            params['data'] = json.dumps(body)
         else:
             print('%s: %s' % (method.upper(), url))
-            resp = m(url, headers=headers, verify=False)
+            params['verify'] = False
+
+        try:
+            resp = m(url, **params)
+        except (
+                requests.ConnectionError,
+                requests.packages.urllib3.exceptions.ProtocolError
+                ) as e:
+            raise MakeRequestException(
+                str(e).strip('()'),
+                url=url,
+                request=name,
+                template=r['template']
+            )
+
         end = time.clock()
 
         try:
@@ -223,5 +242,6 @@ def make_request(request, config):
             'error': e.message,
             'details': traceback.format_exc(),
             'request': e.request,
+            'url': e.url,
             'template': e.template,
         }

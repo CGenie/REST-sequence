@@ -60,29 +60,37 @@
 </div>
 
 <div class="row">
-    <button class="btn btn-danger"
-            ng-click="clearRequestResult()"
-            ng-if="requestResult">Clear</button>
+    <div class="col-md-1">
+        <button class="btn btn-danger"
+                ng-click="clearRequestResult()"
+                ng-if="requestResult">Clear</button>
+    </div>
 
-    <div ng-if="requestResult.responses">
-        <div ng-repeat="result in requestResult.responses">
-            <div><strong>[[ result.method ]]</strong>: [[ result.url ]] ([[ result.status ]])</div>
-            <div><strong>TIME</strong>: [[ result.time ]]</div>
-            <div class="row">
-                <div ng-if="result.body"
-                     pretty-json="result.body"
-                     class=".pre-scrollable col-md-6"></div>
-                <div pretty-json="result.response"
-                     class="col-md-6"></div>
+    <div class="col-md-11">
+
+        <div ng-if="requestResult.responses">
+            <div ng-repeat="result in requestResult.responses">
+                <div><strong>[[ result.method ]]</strong>: [[ result.url ]] ([[ result.status ]])</div>
+                <div><strong>TIME</strong>: [[ result.time ]]</div>
+                <div class="row">
+                    <div ng-if="result.body"
+                         pretty-json="result.body"
+                         class=".pre-scrollable col-md-6"></div>
+                    <div pretty-json="result.response"
+                         class="col-md-6"></div>
+                </div>
             </div>
         </div>
+
+        <div class="panel panel-danger"
+             ng-if="requestResult.error">
+            <h4>[[ requestResult.request ]]: [[ requestResult.error ]]</h4>
+            <h5>[[ requestResult.url ]]</h5>
+            <div class="panel-body">
+                <pre>[[ requestResult.details ]]</pre>
+            </div>
+        </div>
+
     </div>
 
-    <div class="panel panel-danger"
-         ng-if="requestResult.error">
-        <h4>[[ requestResult.request ]]: [[ requestResult.error ]]</h4>
-        <div class="panel-body">
-            <pre>[[ requestResult.details ]]</pre>
-        </div>
-    </div>
 </div>
