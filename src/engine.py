@@ -60,6 +60,7 @@ def read_requests(request=None):
 
         if ln == settings.REQUEST_SEPARATOR:
             yield {
+                'name': request,
                 'dependencies': dependencies,
                 'template': '\n'.join(lst),
             }
@@ -74,6 +75,7 @@ def read_requests(request=None):
 
     if lst:
         yield {
+            'name': request,
             'dependencies': dependencies,
             'template': '\n'.join(lst),
         }
@@ -119,6 +121,8 @@ def perform_requests(rqs, ctx={}):
     for r in rqs:
         push = {}
 
+        name = r['name']
+
         dependencies = r.get('dependencies', [])
 
         for dependency in dependencies:
@@ -130,7 +134,6 @@ def perform_requests(rqs, ctx={}):
         rnd = t.render(ctx)
         dd = json.loads(rnd)
 
-        name = dd['name']
         url = dd['url']
         method = dd['method'].lower()
         body = dd.get('body')
