@@ -56,10 +56,7 @@ class ServerHandler(ServerMixin, tornado.web.RequestHandler):
 
         self.set_header('Content-Type', 'application/json')
 
-        if not server_name.endswith('.json'):
-            server_name = '%s.json' % server_name
-
-        os.remove(os.path.join(settings.SERVERS_DIR, server_name))
+        os.remove(engine.server_path(server_name))
 
         self.finish()
 

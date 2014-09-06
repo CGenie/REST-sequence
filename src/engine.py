@@ -8,19 +8,36 @@ import time
 import settings
 
 
+def json_name(name):
+    if name.endswith('.json'):
+        return name
+
+    return '%s.json' % name
+
+
+def no_json_name(name):
+    return name.replace('.json', '')
+
+
+def server_path(name):
+    return os.path.join(settings.SERVERS_DIR, json_name(name))
+
+
+def request_path(name):
+    return os.path.join(settings.REQUESTS_DIR, json_name(name))
+
+
 def format_datetime_now():
     return datetime.datetime.now().isoformat()
 
 
 def read_context(config=None):
-    f = open(os.path.join(settings.SERVERS_DIR, 'global-config.json'))
+    f = open(server_path('global-config'))
 
     cfg = json.loads(f.read())
 
     if config is not None:
-        if not config.endswith('.json'):
-            config = '%s.json' % config
-        f = open(os.path.join(settings.SERVERS_DIR, config))
+        f = open(server_path(config))
         r = f.read()
         try:
             cfg.update(json.loads(r))
@@ -33,10 +50,7 @@ def read_context(config=None):
 
 
 def read_requests(request=None):
-    if not request.endswith('.json'):
-        request = '%s.json' % request
-
-    f = open(os.path.join(settings.REQUESTS_DIR, request))
+    f = open(request_path(request))
 
     lst = []
     dependencies = []
@@ -71,10 +85,6 @@ def save_request(name, contents):
     :param contents: List of requests as returned by read_requests.
     :return:
     """
-
-    if not name.endswith('.json'):
-        name = '%s.json' % name
-
     ret = []
     for request in contents:
         req = []
@@ -88,7 +98,7 @@ def save_request(name, contents):
 
         ret.append('\n'.join(req))
 
-    with open(os.path.join(settings.REQUESTS_DIR, name), 'w') as f:
+    with open(request_path(name), 'w') as f:
         f.write(settings.REQUEST_SEPARATOR.join(ret))
 
 
@@ -99,10 +109,7 @@ def save_server(name, config):
     :return:
     """
 
-    if not name.endswith('.json'):
-        name = '%s.json' % name
-
-    with open(os.path.join(settings.SERVERS_DIR, name), 'w') as f:
+    with open(server_path(name), 'w') as f:
         f.write(json.dumps(config, indent=4, sort_keys=True))
 
 
@@ -183,4 +190,5 @@ def make_request(request, config):
 
     ctx.update(read_context(config=config))
     rqs = read_requests(request=request)
+
     return perform_requests(rqs, ctx=ctx)

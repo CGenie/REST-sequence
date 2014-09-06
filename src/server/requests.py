@@ -56,10 +56,7 @@ class RequestHandler(RequestMixin, tornado.web.RequestHandler):
 
         self.set_header('Content-Type', 'application/json')
 
-        if not request_name.endswith('.json'):
-            request_name = '%s.json' % request_name
-
-        os.remove(os.path.join(settings.REQUESTS_DIR, request_name))
+        os.remove(engine.request_path(request_name))
 
         self.finish()
 
