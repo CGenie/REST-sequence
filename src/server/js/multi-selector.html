@@ -4,12 +4,24 @@
           ng-click="remove(value)"></span>
 </div>
 
-<button class="btn btn-success">
-    <span class="glyphicon glyphicon-plus-sign"
-          ng-click="show_adder()"></span>
-</button>
+<div class="dropdown"
+     ng-class="{open: control.adder}">
+    <button class="btn btn-success">
+        <span class="glyphicon glyphicon-plus-sign dropdown-toggle"
+              ng-click="toggle_adder()"></span>
+    </button>
 
-<div ng-repeat="value in ngValues"
-     ng-show="control.adder">
-    <span ng-click="add(value)">[[ value ]]</span>
- </div>
+    <ul class="dropdown-menu"
+        style="height: 150px; overflow-y: scroll;">
+        <li class="dropdown-header">
+            <form role="form">
+                <div class="form-group">
+                    <input class="js-dropdown-filter"
+                           ng-model="control.dropdownFilter" />
+                </div>
+            </form>
+        </li>
+        <li ng-repeat="value in ngValues | filter:control.dropdownFilter"
+            ng-click="add(value)"><a href="">[[ value ]]</a></li>
+     </ul>
+</div>

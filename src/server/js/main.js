@@ -94,7 +94,9 @@ app.directive('prettyjsonEditable', [
 
 
 app.directive('ngMultiSelector', [
+    '$timeout',
     function(
+        $timeout
     ) {
         'use strict';
 
@@ -107,11 +109,22 @@ app.directive('ngMultiSelector', [
             templateUrl: '/static/js/multi-selector.html',
             link: function(scope, element, attrs) {
                 scope.control = {
-                    adder: false
+                    adder: false,
+                    dropdownFilter: ''
                 };
 
-                scope.show_adder = function() {
-                    scope.control.adder = true;
+                scope.toggle_adder = function() {
+                    var focusDropdown = function() {
+                        element.find('input')[0].focus();
+                    };
+
+                    scope.control.adder = !scope.control.adder;
+
+                    if(scope.control.adder) {
+                        scope.control.dropdownFilter = '';
+                    }
+
+                    $timeout(focusDropdown);
                 };
 
                 scope.add = function(value) {
