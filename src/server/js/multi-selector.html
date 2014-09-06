@@ -22,6 +22,7 @@
             </form>
         </li>
         <li ng-repeat="value in ngValues | filter:control.dropdownFilter"
+            ng-show="ngModel.indexOf(value) === -1"
             ng-click="add(value)"><a href="">[[ value ]]</a></li>
      </ul>
 </div>
