@@ -4,8 +4,18 @@ import json
 import requests
 import os
 import time
+import traceback
 
 import settings
+
+
+class MakeRequestException(Exception):
+    def __init__(self, message, request=None, template=None):
+        super(MakeRequestException, self).__init__(message)
+
+        self.message = message
+        self.request = request
+        self.template = template
 
 
 def json_name(name):
@@ -131,7 +141,15 @@ def perform_requests(rqs, ctx={}):
 
         t = jinja2.Template(r['template'])
 
-        rnd = t.render(ctx)
+        try:
+            rnd = t.render(ctx)
+        except jinja2.TemplateError as e:
+            raise MakeRequestException(
+                e.message,
+                request=name,
+                template=r['template']
+            )
+
         dd = json.loads(rnd)
 
         url = dd['url']
@@ -194,4 +212,16 @@ def make_request(request, config):
     ctx.update(read_context(config=config))
     rqs = read_requests(request=request)
 
-    return perform_requests(rqs, ctx=ctx)
+    try:
+        ret = perform_requests(rqs, ctx=ctx)
+
+        return {
+            'responses': ret,
+        }
+    except MakeRequestException as e:
+        return {
+            'error': e.message,
+            'details': traceback.format_exc(),
+            'request': e.request,
+            'template': e.template,
+        }

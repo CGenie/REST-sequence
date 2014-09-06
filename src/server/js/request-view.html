@@ -60,10 +60,12 @@
 </div>
 
 <div class="row">
-    <div ng-if="requestResult">
-        <button class="btn btn-danger"
-                ng-click="clearRequestResult()">Clear</button>
-        <div ng-repeat="result in requestResult">
+    <button class="btn btn-danger"
+            ng-click="clearRequestResult()"
+            ng-if="requestResult">Clear</button>
+
+    <div ng-if="requestResult.responses">
+        <div ng-repeat="result in requestResult.responses">
             <div><strong>[[ result.method ]]</strong>: [[ result.url ]] ([[ result.status ]])</div>
             <div><strong>TIME</strong>: [[ result.time ]]</div>
             <div class="row">
@@ -73,6 +75,14 @@
                 <div pretty-json="result.response"
                      class="col-md-6"></div>
             </div>
+        </div>
+    </div>
+
+    <div class="panel panel-danger"
+         ng-if="requestResult.error">
+        <h4>[[ requestResult.request ]]: [[ requestResult.error ]]</h4>
+        <div class="panel-body">
+            <pre>[[ requestResult.details ]]</pre>
         </div>
     </div>
 </div>

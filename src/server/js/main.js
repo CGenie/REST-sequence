@@ -174,7 +174,7 @@ app.directive('requestView', [
                 };
 
                 scope.make_request = function() {
-                    makeRequestResource.query({
+                    makeRequestResource.get({
                         request: scope.ngModel.name,
                         server: scope.ngServer.name
                     }).$promise.then(function(data) {
