@@ -2,6 +2,7 @@ import datetime
 import jinja2
 import json
 import requests
+import requests.exceptions
 import os
 import time
 import traceback
@@ -180,7 +181,8 @@ def perform_requests(rqs, ctx={}):
             resp = m(url, **params)
         except (
                 requests.ConnectionError,
-                requests.packages.urllib3.exceptions.ProtocolError
+                requests.packages.urllib3.exceptions.ProtocolError,
+                requests.exceptions.InvalidSchema
                 ) as e:
             raise MakeRequestException(
                 str(e).strip('()'),
