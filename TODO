@@ -1,0 +1,7 @@
+* Add new server/request button (should be available when no servers/requests
+  are defined)
+* Some way of inserting whole sections of headers
+* Add bucket (container for sequences) -- should inter-bucket sequencing be
+  allowed somehow?
+* Maybe split the request a bit more? Separate headers, method, body?
+* Response validation
